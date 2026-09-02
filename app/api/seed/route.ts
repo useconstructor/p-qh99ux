@@ -19,7 +19,7 @@ export async function POST() {
 
     await getDb().execute({
       sql: `INSERT INTO albums (artist, album, price, genre, condition) VALUES (?, ?, ?, ?, ?)`,
-      args: ['Pink Floyd', 'Dark Side of the Moon', 850, 'Rock Progresivo', 'VG+']
+      args: ['Miles Davis', 'Kind of Blue', 1200, 'Jazz', 'NM']
     })
 
     return NextResponse.json({ success: true, message: 'Album added successfully' })
