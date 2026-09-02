@@ -23,8 +23,8 @@ export async function POST() {
     })
 
     await getDb().execute({
-      sql: `INSERT INTO albums (artist, album, price, genre, condition) VALUES (?, ?, ?, ?, ?)`,
-      args: ['The Beatles', 'Abbey Road', 950, 'Rock', 'G+']
+      sql: `DELETE FROM albums WHERE album = ?`,
+      args: ['Abbey Road']
     })
 
     return NextResponse.json({ success: true, message: 'Album added successfully' })
