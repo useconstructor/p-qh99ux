@@ -22,6 +22,11 @@ export async function POST() {
       args: ['Miles Davis', 'Kind of Blue', 1200, 'Jazz', 'NM']
     })
 
+    await getDb().execute({
+      sql: `INSERT INTO albums (artist, album, price, genre, condition) VALUES (?, ?, ?, ?, ?)`,
+      args: ['The Beatles', 'Abbey Road', 950, 'Rock', 'G+']
+    })
+
     return NextResponse.json({ success: true, message: 'Album added successfully' })
   } catch (error) {
     console.error('Error seeding album:', error)
