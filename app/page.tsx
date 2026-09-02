@@ -16,6 +16,7 @@ export default function HomePage() {
   const [wishlist, setWishlist] = useState<number[]>([])
   const [formState, setFormState] = useState({ name: '', email: '', message: '', genre: '' })
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -40,7 +41,7 @@ export default function HomePage() {
     setWishlist(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id])
   }
 
-  const genres = ['Jazz', 'Rock Clásico', 'Bossa Nova', 'Tango', 'Soul', 'Salsa', 'Electrónica', 'Folk Latinoamericano']
+  const genres = ['Tango', 'MPB', 'Salsa', 'Folk', 'Rock', 'Jazz', 'Bossa Nova', 'Electrónica']
 
   const featuredRecords = [
     { id: 1, artist: 'Astor Piazzolla', album: 'Libertango', genre: 'Tango', condition: 'Mint', year: 1974 },
@@ -50,6 +51,10 @@ export default function HomePage() {
     { id: 5, artist: 'Gal Costa', album: 'India', genre: 'MPB', condition: 'Mint', year: 1973 },
     { id: 6, artist: 'Soda Stereo', album: 'Signos', genre: 'Rock', condition: 'Very Good', year: 1986 },
   ]
+
+  const filteredRecords = selectedGenre
+    ? featuredRecords.filter(record => record.genre === selectedGenre)
+    : featuredRecords
 
   const testimonials = [
     { text: 'Encontré una primera edición de Piazzolla que llevaba años buscando. La calificación de condición fue exactamente como se describía. Servicio impecable.', role: 'Coleccionista de Jazz', location: 'Buenos Aires' },
@@ -238,16 +243,29 @@ export default function HomePage() {
       </section>
 
       {/* Genre Navigation */}
-      <section className="py-8 overflow-x-auto" style={{ backgroundColor: '#1A1612' }}>
+      <section id="géneros" className="py-8 overflow-x-auto" style={{ backgroundColor: '#1A1612' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-4 min-w-max">
+            <button
+              onClick={() => setSelectedGenre(null)}
+              className="px-6 py-3 rounded-full text-sm tracking-wider uppercase transition-all duration-300 hover:scale-105 whitespace-nowrap"
+              style={{
+                backgroundColor: selectedGenre === null ? '#D4AF37' : 'rgba(212, 175, 55, 0.1)',
+                color: selectedGenre === null ? '#0F0F0F' : '#D4AF37',
+                border: '1px solid rgba(212, 175, 55, 0.3)',
+                fontFamily: 'Source Sans Pro, sans-serif'
+              }}
+            >
+              Todos
+            </button>
             {genres.map((genre) => (
               <button
                 key={genre}
+                onClick={() => setSelectedGenre(genre)}
                 className="px-6 py-3 rounded-full text-sm tracking-wider uppercase transition-all duration-300 hover:scale-105 whitespace-nowrap"
-                style={{ 
-                  backgroundColor: 'rgba(212, 175, 55, 0.1)', 
-                  color: '#D4AF37', 
+                style={{
+                  backgroundColor: selectedGenre === genre ? '#D4AF37' : 'rgba(212, 175, 55, 0.1)',
+                  color: selectedGenre === genre ? '#0F0F0F' : '#D4AF37',
                   border: '1px solid rgba(212, 175, 55, 0.3)',
                   fontFamily: 'Source Sans Pro, sans-serif'
                 }}
@@ -312,7 +330,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {featuredRecords.map((record) => (
+            {filteredRecords.map((record) => (
               <Card 
                 key={record.id}
                 className="group relative overflow-hidden rounded-xl transition-all duration-500 hover:scale-[1.02]"
